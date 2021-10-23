@@ -1,0 +1,14 @@
+{
+    "build": "TestCafe Build",
+    "project": "TestCafe Projct",
+    "resolution": "1024x768",
+    "name": "TestCase",
+    "browserstack.debug": true,
+    "browserstack.console": "errors",
+    "browserstack.networkLogs": true,
+    "browserstack.local": true,
+    "browserstack.maskCommands": "setvalues",
+    "browserstack.idleTimeout": 300,
+    "browserstack.captureCrash": "true",
+    "browserInitTimeout": 360000
+}

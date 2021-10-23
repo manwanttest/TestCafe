@@ -1,0 +1,55 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  dir: '$(Build.SourcesDirectory)'
+  artifactdir: '$(Build.ArtifactStagingDirectory)'
+
+stages: 
+- stage: Build 
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build and Push an image with tag $(tag) from $(dir)
+      inputs:
+        command: buildAndPush
+        repository: 'cafeimage'
+        dockerfile: $(dir)/Dockerfile
+        containerRegistry: 'AzureContainerRegistry'
+        tags: |
+          $(tag)
+    - task: CopyFiles@2 
+      displayName: Copying docker compose yml file in $(artifactdir)
+      inputs: 
+           Contents: 'docker-compose.yml' 
+           TargetFolder: $(artifactdir)
+    - task: CopyFiles@2
+      displayName: Copying .env file in $(artifactdir)
+      inputs:
+           Contents: '.env'
+           TargetFolder: $(artifactdir)
+    - task: PublishBuildArtifacts@1
+      displayName: Publishing drop folder for release Pipeline
+      inputs:
+           PathtoPublish: $(artifactdir)
+           ArtifactName: 'drop'
+           publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      displayName: Publishing Results folder for release Pipeline
+      inputs:
+           PathtoPublish: $(dir)
+           ArtifactName: 'Results'
+           

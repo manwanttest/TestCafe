@@ -1,0 +1,10 @@
+version: "3"
+services:
+  testcafe:
+    container_name: TestCafe_Container
+    image: ${IMAGE}:${TAG}
+    command: ${TEST} ${FLAGS}
+    shm_size: '12gb'
+    volumes:
+      - ./Docker:/usr/share/testcafedocker/Artifacts
+      - ./Docker:/usr/share/testcafedocker/Reports/CucumberReporter
